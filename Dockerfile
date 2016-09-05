@@ -12,6 +12,8 @@ RUN apt-get install -y build-essential libssl-dev
 RUN apt-get update && apt-get install -y python python-setuptools
 RUN easy_install supervisor
 
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
 
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 4.2.6
@@ -23,4 +25,5 @@ RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh
     && nvm alias default $NODE_VERSION \
     && nvm use default
 
+RUN nvm install 0.10.46
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
