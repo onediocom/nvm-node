@@ -1,16 +1,25 @@
 FROM ubuntu:16.04
 MAINTAINER Kemal DAG <gkemaldag@gmail.com>
 
+WORKDIR /tmp
+
+ENV GIFSICLE_VERSION 1.88
+ENV FFMPEG_VERSION 2.7.2
+
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN apt-get update --fix-missing
-RUN apt-get install -y curl
-RUN apt-get install -y build-essential libssl-dev
+RUN apt-get install -y curl libssl-dev libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev libpng-dev build-essential wget xz-utils graphicsmagick webp
 
-#install gm
-RUN apt-get update && apt-get install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev libpng-dev && apt-get clean
+#install gifsicle
+RUN wget -q "http://www.lcdf.org/gifsicle/gifsicle-$GIFSICLE_VERSION.tar.gz" && \
+  tar -zxf "gifsicle-$GIFSICLE_VERSION.tar.gz" && cd gifsicle-$GIFSICLE_VERSION && \
+  ./configure && make && make install
 
-RUN apt-get update && apt-get install -y build-essential wget xz-utils graphicsmagick webp
+#install ffmpeg
+RUN wget -q "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz" && \
+  tar -xf ffmpeg-release-64bit-static.tar.xz && cd ffmpeg-3.1.3-64bit-static && \
+  mv ffmpeg ffmpeg-10bit ffprobe qt-faststart /usr/local/bin/
 
 
 #install supervisord
@@ -37,12 +46,8 @@ RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh
 ENV TZ=Europe/Istanbul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-
-VOLUME /var/app/code
-VOLUME /var/app/logs
-
 #install lestream
-RUN npm install -g lestream
+RUN source $NVM_DIR/nvm.sh && npm install -g lestream
 
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
