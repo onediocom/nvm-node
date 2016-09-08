@@ -21,7 +21,7 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 4.2.6
+ENV NODE_VERSION 0.10.46
 
 # Install nvm with node and npm and use 4.2.6 as default
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh | bash \
@@ -30,8 +30,8 @@ RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh
     && nvm alias default $NODE_VERSION \
     && nvm use default
 
-RUN source $NVM_DIR/nvm.sh \
-    && nvm install 0.10.46
+#no need to cache v 0.10.46 as it is the default already installed
+#RUN source $NVM_DIR/nvm.sh && nvm install 0.10.46
 
 #set timezone
 ENV TZ=Europe/Istanbul
@@ -40,6 +40,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 VOLUME /var/app/code
 VOLUME /var/app/logs
+
+#install lestream
+RUN npm install -g lestream
+
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
