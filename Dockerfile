@@ -34,7 +34,13 @@ RUN source $NVM_DIR/nvm.sh \
     && nvm install 0.10.46
 
 #set timezone
-RUN sudo echo "Europe/Istanbul" > /etc/timezone
-RUN sudo dpkg-reconfigure -f noninteractive tzdata
+ENV TZ=Europe/Istanbul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+VOLUME /var/app/code
+VOLUME /var/app/logs
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
+
