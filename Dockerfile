@@ -32,5 +32,9 @@ RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh
 
 RUN source $NVM_DIR/nvm.sh \
     && nvm install 0.10.46
-    
+
+#set timezone
+RUN sudo echo "Europe/Istanbul" > /etc/timezone
+RUN sudo dpkg-reconfigure -f noninteractive tzdata
+
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
