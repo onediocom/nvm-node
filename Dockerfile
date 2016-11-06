@@ -18,7 +18,7 @@ RUN wget -q "http://www.lcdf.org/gifsicle/gifsicle-$GIFSICLE_VERSION.tar.gz" && 
 
 #install ffmpeg
 RUN wget -q "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz" && \
-  tar -xf ffmpeg-release-64bit-static.tar.xz && cd ffmpeg-3.1.3-64bit-static && \
+  tar -xf ffmpeg-release-64bit-static.tar.xz && cd ffmpeg-3.2-64bit-static && \
   mv ffmpeg ffmpeg-10bit ffprobe qt-faststart /usr/local/bin/
 
 
@@ -43,8 +43,9 @@ RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh
 #RUN source $NVM_DIR/nvm.sh && nvm install 0.10.46
 
 #set timezone
-ENV TZ=Europe/Istanbul
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ENV OFFSET="-3"
+#RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -fs /usr/share/zoneinfo/Etc/GMT$OFFSET /etc/localtime
 
 #install lestream
 RUN source $NVM_DIR/nvm.sh && npm install -g lestream
