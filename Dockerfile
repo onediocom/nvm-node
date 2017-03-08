@@ -18,7 +18,7 @@ RUN wget -q "http://www.lcdf.org/gifsicle/gifsicle-$GIFSICLE_VERSION.tar.gz" && 
 
 #install ffmpeg
 RUN wget -q "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz" && \
-  tar -xf ffmpeg-release-64bit-static.tar.xz && cd ffmpeg-3.2-64bit-static && \
+  tar -xf ffmpeg-release-64bit-static.tar.xz && cd ffmpeg-3.2.4-64bit-static && \
   mv ffmpeg ffmpeg-10bit ffprobe qt-faststart /usr/local/bin/
 
 
@@ -31,10 +31,12 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 0.10.46
+ENV NEXT_NODE_VERSION 0.12.18
 
 # Install nvm with node and npm and use 4.2.6 as default
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.6/install.sh | bash \
     && source $NVM_DIR/nvm.sh \
+    && nvm install $NEXT_NODE_VERSION \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
     && nvm use default
